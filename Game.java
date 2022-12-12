@@ -29,11 +29,10 @@ public class Game {
 		}
 		return cards;
 	}
-    public static Card[] cutDeck(Card[] cards) {
+    public static Card[] cutDeck(Random r, Card[] cards) {
 		// Cut the deck
 		int cardslength = cards.length;
 		Card[] new_cards = new Card[cards.length];
-		Random r = new Random(System.currentTimeMillis());
 		int randnum = r.nextInt(cardslength*3/5)+cardslength*2/5; // Find a value around the middle index of the array
 		System.arraycopy(cards, randnum, new_cards, 0, cardslength-randnum);
 		System.arraycopy(cards, 0, new_cards, cardslength-randnum, randnum);
