@@ -2,7 +2,38 @@ import java.util.Random;
 
 public class Game {
     public static void main(String[] args) {
+        // Create the instances and variables which are required
+        
+        // Create a deck, shuffle and cut the deck
+
+        // Distribute 4 cards for each player and the board
+
         // Game Loop
+        while (true) {
+            // If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
+
+            // Print the board
+
+            // Player 1 Turn
+
+            // Calculate Player 1 Score
+
+            // Print the board
+            
+            // Player 2 Turn
+
+            // Calculate Player 2 Score
+
+            // Check if the game is end
+
+                // Move all the cards on the board to the player who cut or did pisti lastly 
+
+                // Add +3 additional points to the player taken more cards
+
+                // Print the scores
+
+                // Print the winner
+        }
     }
     public static Card[] createDeck() {
         // Create a deck
