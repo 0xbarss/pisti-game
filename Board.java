@@ -22,4 +22,13 @@ public class Board {
         this.cards = new Card[52];
         this.size = 0;
     }
+    public void printCard() {
+        if (this.size > 0) {
+            Card card = this.getLastCard();
+		    System.out.println("||Board||                 ++ "  + card.getSuit() + card.getRank() + " ++");
+        }
+        else {
+            System.out.println("||Board||                 ++ Empty ++");
+        }
+	}
 }

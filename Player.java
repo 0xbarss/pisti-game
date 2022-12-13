@@ -48,6 +48,15 @@ public class Player {
 		this.size -= 1;
 		return this.cards[this.size];
 	}
+	public void printCards(String text) {
+		Card card;
+		System.out.print("||" + text + "||  ");
+		for (int i=0; i<this.size; i++) {
+			card = this.cards[i];
+			System.out.print("-- " + card.getSuit() + card.getRank() + " --");
+		}
+		System.out.println();
+	}
 	public int play(Scanner sc, Board board) {
 		char suit;
 		char rank;

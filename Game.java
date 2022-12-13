@@ -19,7 +19,7 @@ public class Game {
 		initial_cards = cutDeck(r, initial_cards);
         // Distribute 4 cards for each player and the board
 		initial_cards_size = distributeCard(player1, player2, dealer, initial_cards, initial_cards_size);
-
+		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
         // Game Loop
         while (true) {
             // If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
