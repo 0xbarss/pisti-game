@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Random;
 
 public class Player {
 	// Attributes
@@ -131,6 +132,60 @@ public class Player {
 			}
 			board.addCard(this.removeCard(this.findCard(suit, rank)));
 		}
+		return task_type;
+	}
+	public int playAI(Random r, Board board) {
+		int task_type = 0; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
+		int randnum = 0;
+		int index = 0;
+		// If there is no card, break 
+		if (this.size == 0) task_type = -1;
+		// Determine if a card will be selected according to the card on the board
+		else if (board.getSize() > 0) {
+			Card card;
+			boolean matched = false;
+			char last_card_rank = board.getLastCard().getRank();
+			// Check if any card matches with the card on the board
+			for (int i=0; i<this.size; i++) {
+				index = i;
+				card = this.cards[i];
+				if (last_card_rank == card.getRank()) {
+					matched = true;
+					if (board.getSize() == 1) task_type = 2;
+					else task_type = 1;
+					break;
+				}
+			}
+			// Check if there is any J in the cards
+			if (!matched) {
+				for (int i=0; i<this.size; i++) {
+					index = i;
+					card = this.cards[i];
+					if (card.getRank() == 'J') {
+						matched = true;
+						task_type = 1;
+						break;
+					}
+				}
+			}
+			// Randomly select a card
+			if (!matched) {
+				index = r.nextInt(this.size);
+			}
+		}
+		// Else, if there is no card on the board, it will be selected randomly except J
+		else if (board.getSize() == 0) {
+			while (true) {
+				randnum = r.nextInt(this.size);
+				// Choose any card except J
+				// If there is only J, play it
+				if ((this.cards[randnum].getRank() != 'J') || (this.cards[randnum].getRank() == 'J' && this.size == 0)) {
+					index = randnum;
+					break;
+				}
+			}                                                                                      
+		}
+		board.addCard(this.removeCard(index));
 		return task_type;
 	}
 }

@@ -6,12 +6,12 @@ public class Game {
         // Create the instances and variables which are required
 		Scanner sc = new Scanner(System.in);
 		Random r = new Random(System.currentTimeMillis());
-		Player player1 = new Player();
-		Player player2 = new Player();
+		Player player1 = new Player(); // Human
+		Player player2 = new Player(); // AI
 		Board board = new Board();
-		int dealer = r.nextInt(2); // 0-->Player1 | 1-->Player2
+		int dealer = r.nextInt(2); // 0-->Human | 1-->AI
 		int task_type; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
-		int last_card_winner = 0; // 1-->Player1 | -1-->Player2
+		int last_card_winner = 0; // 1-->Human | -1-->AI
         // Create a deck, shuffle and cut the deck
 		Card[] initial_cards = createDeck();
 		int initial_cards_size = initial_cards.length;
@@ -38,8 +38,7 @@ public class Game {
 				// Print the board
 				board.printCard();
 				// Player 2 Turn
-				player2.printCards("Player-2");
-				task_type = player2.play(sc, board);
+				task_type = player2.playAI(r, board);
 				// Calculate Player 2 Score
 				last_card_winner = calculateScore(player2, board, task_type, -1, last_card_winner);
 				System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
