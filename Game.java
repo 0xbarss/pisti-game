@@ -110,4 +110,14 @@ public class Game {
 		}
 		return initial_cards_size;
 	}
+	public static int placeCardsOnBoard(Board board, Card[] initial_cards, int initial_cards_size) {
+		// Place 4 cards on the board
+		Card card;
+		for (int i=0; i<4; i++) {
+			card = initial_cards[initial_cards_size-1];
+			initial_cards_size -= 1;
+			board.addCard(card);
+		}
+		return initial_cards_size;
+	}
 }
