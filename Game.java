@@ -1,11 +1,19 @@
+import java.util.Scanner;
 import java.util.Random;
 
 public class Game {
     public static void main(String[] args) {
         // Create the instances and variables which are required
-        
+		Scanner sc = new Scanner(System.in);
+		Random r = new Random(System.currentTimeMillis());
+		Player player1 = new Player();
+		Player player2 = new Player();
+		Board board = new Board();
         // Create a deck, shuffle and cut the deck
-
+		Card[] initial_cards = createDeck();
+		int initial_cards_size = initial_cards.length;
+		initial_cards = shuffleDeck(r, initial_cards);
+		initial_cards = cutDeck(r, initial_cards);
         // Distribute 4 cards for each player and the board
 
         // Game Loop
