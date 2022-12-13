@@ -11,7 +11,7 @@ public class Game {
 		Board board = new Board();
 		int dealer = r.nextInt(2); // 0-->Player1 | 1-->Player2
 		int task_type; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
-		int last_card_winner; // 1-->Player1 | -1-->Player2
+		int last_card_winner = 0; // 1-->Player1 | -1-->Player2
         // Create a deck, shuffle and cut the deck
 		Card[] initial_cards = createDeck();
 		int initial_cards_size = initial_cards.length;
@@ -32,22 +32,51 @@ public class Game {
 			player1.printCards("Player-1");
 			task_type = player1.play(sc, board);
             // Calculate Player 1 Score
-
-            // Print the board
-            
-            // Player 2 Turn
-
-            // Calculate Player 2 Score
-
+			last_card_winner = calculateScore(player1, board, task_type, 1, last_card_winner);
+			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+			if (task_type != -1) { // If the first player has no card and could not play, do not ask the second player to play, end the game
+				// Print the board
+				player2.printCards("Player-2");
+				// Player 2 Turn
+				task_type = player2.play(sc, board);
+				// Calculate Player 2 Score
+				last_card_winner = calculateScore(player2, board, task_type, -1, last_card_winner);
+				System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+			}
             // Check if the game is end
-
-                // Move all the cards on the board to the player who cut or did pisti lastly 
-
+			if ((player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size == 0) || (task_type == -1)) {
+				// Move all the cards on the board to the player who cut or made a pisti lastly
+				Card card;
+				Card[] board_cards = board.getCards();
+				if (board.getSize() != 0) {
+					if (last_card_winner == 1) {
+						player1.setTakenCardsCount(player1.getTakenCardsCount()+board.getSize());
+						for (int i=0; i<board.getSize(); i++) {
+							card = board_cards[i];
+							player1.setScore(player1.getScore()+card.getPoint());
+						}
+						board.clearBoard();
+					}
+					else if (last_card_winner == -1) {
+						player2.setTakenCardsCount(player2.getTakenCardsCount()+board.getSize());
+						for (int i=0; i<board.getSize(); i++) {
+							card = board_cards[i];
+							player2.setScore(player2.getScore()+card.getPoint());
+						}
+						board.clearBoard();
+					}
+				}
                 // Add +3 additional points to the player taken more cards
-
+				if (player1.getTakenCardsCount() > player2.getTakenCardsCount()) player1.setScore(player1.getScore()+3);
+				else player2.setScore(player2.getScore()+3);
                 // Print the scores
-
-                // Print the winner
+				System.out.println("Player-1 Score: " + player1.getScore());
+				System.out.println("Player-2 Score: " + player2.getScore());
+	            // Print the winner
+				if (player1.getScore() > player2.getScore()) System.out.println("\n!!!Player-1 has won!!!\n");
+				else System.out.println("\n!!!Player-2 has won!!!\n");
+				break;
+			}
         }
     }
     public static Card[] createDeck() {
