@@ -36,8 +36,9 @@ public class Game {
 			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
 			if (task_type != -1) { // If the first player has no card and could not play, do not ask the second player to play, end the game
 				// Print the board
-				player2.printCards("Player-2");
+				board.printCard();
 				// Player 2 Turn
+				player2.printCards("Player-2");
 				task_type = player2.play(sc, board);
 				// Calculate Player 2 Score
 				last_card_winner = calculateScore(player2, board, task_type, -1, last_card_winner);

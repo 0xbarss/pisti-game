@@ -58,8 +58,8 @@ public class Player {
 		System.out.println();
 	}
 	public int play(Scanner sc, Board board) {
-		char suit;
-		char rank;
+		char suit = '0';
+		char rank = '0';
 		String input;
 		Card card;
 		int task_type = 0; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
