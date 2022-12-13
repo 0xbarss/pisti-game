@@ -10,6 +10,7 @@ public class Board {
     // Methods
     public Card[] getCards() {return this.cards;}
     public int getSize() {return this.size;}
+    public Card getLastCard() {return this.cards[this.size-1];}
     // Special Methods
 	public void addCard(Card card) {
         // Add a card to the cards array and increase the size 1
