@@ -9,12 +9,16 @@ public class Game {
 		Player player1 = new Player();
 		Player player2 = new Player();
 		Board board = new Board();
+		int dealer = r.nextInt(2); // 0-->Player1 | 1-->Player2
+		int task_type; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
+		int last_card_winner; // 1-->Player1 | -1-->Player2
         // Create a deck, shuffle and cut the deck
 		Card[] initial_cards = createDeck();
 		int initial_cards_size = initial_cards.length;
 		initial_cards = shuffleDeck(r, initial_cards);
 		initial_cards = cutDeck(r, initial_cards);
         // Distribute 4 cards for each player and the board
+		initial_cards_size = distributeCard(player1, player2, dealer, initial_cards, initial_cards_size);
 
         // Game Loop
         while (true) {
@@ -76,5 +80,34 @@ public class Game {
 		System.arraycopy(cards, randnum, new_cards, 0, cardslength-randnum);
 		System.arraycopy(cards, 0, new_cards, cardslength-randnum, randnum);
 		return new_cards;
+	}
+	public static int distributeCard(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
+		// Distribute 4 cards for each player
+		Card card;
+		if (dealer == 0) {
+			for (int i=0; i<8; i++) {
+				card = initial_cards[initial_cards_size-1];
+				initial_cards_size -= 1;
+				if (i%2 == 0) {
+					player2.addCard(card);
+				}
+				else {
+					player1.addCard(card);
+				}
+			}
+		}
+		else {
+			for (int i=0; i<8; i++) {
+				card = initial_cards[initial_cards_size-1];
+				initial_cards_size -= 1;
+				if (i%2 == 0) {
+					player1.addCard(card);
+				}
+				else {
+					player2.addCard(card);
+				}
+			}
+		}
+		return initial_cards_size;
 	}
 }
