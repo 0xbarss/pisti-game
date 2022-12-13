@@ -74,7 +74,8 @@ public class Game {
 				System.out.println("Player-2 Score: " + player2.getScore());
 	            // Print the winner
 				if (player1.getScore() > player2.getScore()) System.out.println("\n!!!Player-1 has won!!!\n");
-				else System.out.println("\n!!!Player-2 has won!!!\n");
+				else if (player1.getScore() < player2.getScore()) System.out.println("\n!!!Player-2 has won!!!\n");
+				else System.out.println("\n!!!Draw!!!\n");
 				break;
 			}
         }
