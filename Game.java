@@ -23,11 +23,14 @@ public class Game {
         // Game Loop
         while (true) {
             // If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
-
+			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
+				initial_cards_size = distributeCard(player1, player2, dealer, initial_cards, initial_cards_size);
+			}
             // Print the board
-
+			board.printCard();
             // Player 1 Turn
-
+			player1.printCards("Player-1");
+			task_type = player1.play(sc, board);
             // Calculate Player 1 Score
 
             // Print the board
@@ -119,5 +122,28 @@ public class Game {
 			board.addCard(card);
 		}
 		return initial_cards_size;
+	}
+	public static int calculateScore(Player player, Board board, int task_type, int turn, int last_card_winner) {
+		// Update the score, set taken cards count and clear the board 
+		Card card;
+		Card[] board_cards = board.getCards();
+		if (task_type == 2) {                        // If same ranks matched and the number of the cards on the board is 2 (pisti)
+			player.setScore(player.getScore()+10);
+			player.setTakenCardsCount(player.getTakenCardsCount()+board.getSize());
+			board.clearBoard();
+			if (turn == 1) last_card_winner = 1;
+			else last_card_winner = -1;
+		}
+		else if (task_type == 1) {                   // If J or the same rank took all the cards (cut)
+			player.setTakenCardsCount(player.getTakenCardsCount()+board.getSize());
+			for (int i=0; i<board.getSize(); i++) {
+				card = board_cards[i];
+				player.setScore(player.getScore()+card.getPoint());
+			}
+			board.clearBoard();
+			if (turn == 1) last_card_winner = 1;
+			else last_card_winner = -1;
+		}
+		return last_card_winner;
 	}
 }
