@@ -1,9 +1,12 @@
 import java.util.Scanner;
 import java.util.Random;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.io.FileWriter;
 
 public class Game {
-    public static void main(String[] args) {
-        // Create the instances and variables which are required
+    public static void main(String[] args) {	
+		// Create the instances and variables which are required
 		Scanner sc = new Scanner(System.in);
 		Random r = new Random(System.currentTimeMillis());
 		Player player1 = new Player(); // Human
@@ -18,13 +21,13 @@ public class Game {
 		initial_cards = shuffleDeck(r, initial_cards);
 		initial_cards = cutDeck(r, initial_cards);
         // Distribute 4 cards for each player and the board
-		initial_cards_size = distributeCard(player1, player2, dealer, initial_cards, initial_cards_size);
+		initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
 		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
         // Game Loop
         while (true) {
             // If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
-				initial_cards_size = distributeCard(player1, player2, dealer, initial_cards, initial_cards_size);
+				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
 			}
             // Print the board
 			board.printCard();
@@ -73,12 +76,22 @@ public class Game {
 				System.out.println("Player-1 Score: " + player1.getScore());
 				System.out.println("Player-2 Score: " + player2.getScore());
 	            // Print the winner
-				if (player1.getScore() > player2.getScore()) System.out.println("\n!!!Player-1 has won!!!\n");
-				else if (player1.getScore() < player2.getScore()) System.out.println("\n!!!Player-2 has won!!!\n");
-				else System.out.println("\n!!!Draw!!!\n");
+				if (player1.getScore() > player2.getScore()) {
+					System.out.println("\n!!!Player-1 has won!!!\n");
+					saveHighScore(sc, player1.getScore());
+				}
+				else if (player1.getScore() < player2.getScore()) {
+					System.out.println("\n!!!Player-2 has won!!!\n");
+					saveHighScore(sc, player1.getScore());
+				}
+				else {
+					System.out.println("\n!!!Draw!!!\n");
+					saveHighScore(sc, player1.getScore());
+				}
 				break;
 			}
         }
+		
     }
     public static Card[] createDeck() {
         // Create a deck
@@ -114,7 +127,7 @@ public class Game {
 		System.arraycopy(cards, 0, new_cards, cardslength-randnum, randnum);
 		return new_cards;
 	}
-	public static int distributeCard(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
+	public static int distributeCards(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
 		// Distribute 4 cards for each player
 		Card card;
 		if (dealer == 0) {
@@ -175,5 +188,77 @@ public class Game {
 			else last_card_winner = -1;
 		}
 		return last_card_winner;
+	}
+	public static void saveHighScore(Scanner sc, int new_score) {
+		String[] data;
+		String file_name = "scores.txt";
+		int index = 0;
+		int capacity = 10; // Store top 10 scores
+		boolean confirmed = true;
+		Scanner reader = null;
+		FileWriter writer = null;
+		String[] names = new String[capacity];
+		int[] scores = new int[capacity];
+		// Create a reader object
+		try {
+			reader = new Scanner(Paths.get(file_name));
+			// Get all the players in scores.txt
+			while (reader.hasNextLine()) {
+				data = reader.nextLine().split(" ");
+				if (data[0].equals(" ")) continue;
+				names[index] = data[0];
+				scores[index] = Integer.parseInt(data[1]);
+				index += 1;
+			}
+			if (index == capacity) index = capacity-1;
+		}
+		catch (IOException r) {
+			System.out.println("An error occured");
+		}
+		finally {
+			if (reader != null) reader.close();
+		}
+		// Check if the new score is the highest
+		if (scores[0] >= new_score) {
+			confirmed = false;
+		}
+		// Add the score to the file
+		if (confirmed) {
+			// Check if the player entered a valid name
+			String player_name;
+			while (true) {
+				System.out.print("Enter your name: ");
+				player_name = sc.nextLine();
+				if (player_name.split(" ").length == 1) break;
+				System.out.println("Please do not use space while writing the name!");
+			}
+			// Shift all elements and add new score
+			for (int i=capacity-1; i>0; i--) {
+				names[i] = names[i-1];
+				scores[i] = scores[i-1];
+			}
+			names[0] = player_name;
+			scores[0] = new_score;
+			// Create a writer object
+			try {
+				writer = new FileWriter(file_name);
+				// Write new high score to the file
+				for (int i=0; i<=index; i++) {
+					if (i > 0) {
+						writer.write("\n" + names[i] + " " + Integer.toString(scores[i]));
+					}
+					else {
+						writer.write(names[i] + " " + Integer.toString(scores[i]));
+					}
+				}
+				writer.close();
+			}
+			catch (IOException e) {
+				System.out.println("An error occured");
+			}
+			finally {
+				//if (writer != null) writer.close();
+			}
+		}
 	}
 }
