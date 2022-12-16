@@ -214,7 +214,7 @@ public class Game {
 			if (index == capacity) index = capacity-1;
 		}
 		catch (IOException r) {
-			System.out.println("An error occured");
+			// System.out.println("An error occured");
 		}
 		finally {
 			if (reader != null) reader.close();
@@ -256,10 +256,10 @@ public class Game {
 				writer.close();
 			}
 			catch (IOException e) {
-				System.out.println("An error occured");
+				// System.out.println("An error occured");
 			}
 			finally {
-				//if (writer != null) writer.close();
+				// if (writer != null) writer.close();
 			}
 		}
 	}

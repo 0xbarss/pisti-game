@@ -17,11 +17,9 @@ public class Player {
 		this.score = 0;
 	}
 	// Methods
-	public Card[] getCards() {return this.cards;}
 	public int getSize() {return this.size;}
 	public int getTakenCardsCount() {return this.cards_count;}
 	public int getScore() {return this.score;}
-	public void setCards(Card[] cards) {this.cards = cards;}
     public void setSize(int size) {this.size = size;}
 	public void setTakenCardsCount(int cards_count) {this.cards_count = cards_count;}
 	public void setScore(int score) {this.score = score;}
