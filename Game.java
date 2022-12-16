@@ -37,14 +37,17 @@ public class Game {
             // Calculate Player 1 Score
 			last_card_winner = calculateScore(player1, board, task_type, 1, last_card_winner);
 			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+			// Print information
+			if (task_type == 2) System.out.println("Player-1 made a pisti!");
+			else if (task_type == 1) System.out.println("Player-1 made a cut!");
 			if (task_type != -1) { // If the first player has no card and could not play, do not ask the second player to play, end the game
-				// Print the board
-				board.printCard();
 				// Player 2 Turn
 				task_type = player2.playAI(r, board);
+				// Print information
+				if (task_type == 2) System.out.println("Player-2 made a pisti!");
+				else if (task_type == 1) System.out.println("Player-2 made a cut!");
 				// Calculate Player 2 Score
 				last_card_winner = calculateScore(player2, board, task_type, -1, last_card_winner);
-				System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
 			}
             // Check if the game is end
 			if ((player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size == 0) || (task_type == -1)) {
@@ -78,20 +81,18 @@ public class Game {
 	            // Print the winner
 				if (player1.getScore() > player2.getScore()) {
 					System.out.println("\n!!!Player-1 has won!!!\n");
-					saveHighScore(sc, player1.getScore());
 				}
 				else if (player1.getScore() < player2.getScore()) {
 					System.out.println("\n!!!Player-2 has won!!!\n");
-					saveHighScore(sc, player1.getScore());
 				}
 				else {
 					System.out.println("\n!!!Draw!!!\n");
-					saveHighScore(sc, player1.getScore());
 				}
+				// Save the high score
+				saveHighScore(sc, player1.getScore());
 				break;
 			}
         }
-		
     }
     public static Card[] createDeck() {
         // Create a deck
@@ -224,6 +225,7 @@ public class Game {
 		}
 		// Add the score to the file
 		if (confirmed) {
+			System.out.println("New High Score!");
 			// Check if the player entered a valid name
 			String player_name;
 			while (true) {
