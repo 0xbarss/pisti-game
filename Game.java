@@ -6,6 +6,7 @@ import java.io.FileWriter;
 
 public class Game {
     public static void main(String[] args) {	
+		System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
 		// Create the instances and variables which are required
 		Scanner sc = new Scanner(System.in);
 		Random r = new Random(System.currentTimeMillis());
@@ -51,7 +52,7 @@ public class Game {
 			}
             // Check if the game is end
 			if ((player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size == 0) || (task_type == -1)) {
-				// Move all the cards on the board to the player who cut or made a pisti lastly
+				// Move all the cards on the board to the player who made a cut or a pisti lastly
 				Card card;
 				Card[] board_cards = board.getCards();
 				if (board.getSize() != 0) {
@@ -206,9 +207,12 @@ public class Game {
 			// Get all the players in scores.txt
 			while (reader.hasNextLine()) {
 				data = reader.nextLine().split(" ");
-				if (data[0].equals(" ")) continue;
-				names[index] = data[0];
-				scores[index] = Integer.parseInt(data[1]);
+				names[index] = "";
+				for (int i=0; i<data.length-1; i++) {
+					names[index] += data[i] + " ";
+				}
+				names[index] = names[index].trim();
+				scores[index] = Integer.parseInt(data[data.length-1]);
 				index += 1;
 			}
 			if (index == capacity) index = capacity-1;
@@ -226,14 +230,9 @@ public class Game {
 		// Add the score to the file
 		if (confirmed) {
 			System.out.println("New High Score!");
-			// Check if the player entered a valid name
-			String player_name;
-			while (true) {
-				System.out.print("Enter your name: ");
-				player_name = sc.nextLine();
-				if (player_name.split(" ").length == 1) break;
-				System.out.println("Please do not use space while writing the name!");
-			}
+			// Ask player to enter a name
+			System.out.print("Enter your name: ");
+			String player_name = sc.nextLine();
 			// Shift all elements and add new score
 			for (int i=capacity-1; i>0; i--) {
 				names[i] = names[i-1];

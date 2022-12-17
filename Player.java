@@ -81,7 +81,7 @@ public class Player {
 			}
 			// Check if the given suit exists in the suits
 			for (int i=0; i<suits.length; i++) {
-				if (input.charAt(0) == suits[i]) {
+				if (Character.toUpperCase(input.charAt(0)) == suits[i]) {
 					suit = suits[i];
 					suit_confirmmed = true;
 				}
@@ -92,7 +92,7 @@ public class Player {
 			}
 			// Check if the given rank exists in the ranks
 			for (int i=0; i<ranks.length; i++) {
-				if (input.charAt(1) == ranks[i]) {
+				if (Character.toUpperCase(input.charAt(1)) == ranks[i]) {
 					rank = ranks[i];
 					rank_confirmed = true;
 				}
