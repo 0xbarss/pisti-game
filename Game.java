@@ -14,9 +14,10 @@ public class Game {
 		Player player2 = new Player(); // AI
 		Board board = new Board();
 		int dealer = r.nextInt(2); // 0-->Human | 1-->AI
-		int task_type; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
-		int last_card_winner = 0; // 1-->Human | -1-->AI
-        // Create a deck, shuffle and cut the deck
+		int startwith = dealer; // 0-->Human | 1-->AI | -1-->Ignore
+		int last_card_winner = -1; // 0-->Human | 1-->AI
+		int task_type = 0; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
+        // Create, shuffle and cut the deck
 		Card[] initial_cards = createDeck();
 		int initial_cards_size = initial_cards.length;
 		initial_cards = shuffleDeck(r, initial_cards);
@@ -26,32 +27,38 @@ public class Game {
 		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
         // Game Loop
         while (true) {
-            // If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
+			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
 				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
 			}
-            // Print the board
-			board.printCard();
-            // Player 1 Turn
-			player1.printCards("Player-1");
-			task_type = player1.play(sc, board);
-            // Calculate Player 1 Score
-			last_card_winner = calculateScore(player1, board, task_type, 1, last_card_winner);
-			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
-			// Print information
-			if (task_type == 2) System.out.println("Player-1 made a pisti!");
-			else if (task_type == 1) System.out.println("Player-1 made a cut!");
-			if (task_type != -1) { // If the first player has no card and could not play, do not ask the second player to play, end the game
-				// Player 2 Turn
-				task_type = player2.playAI(r, board);
+			// Player-1
+			if (startwith != 1 && task_type != -1) {
+				startwith = -1;
 				// Print information
 				if (task_type == 2) System.out.println("Player-2 made a pisti!");
 				else if (task_type == 1) System.out.println("Player-2 made a cut!");
+				// Print the board
+				board.printCard();
+				// Player 1 Turn
+				player1.printCards("Player-1");
+				task_type = player1.play(sc, board);
+				// Calculate Player 1 Score
+				last_card_winner = calculateScore(player1, board, task_type, 0, last_card_winner);
+			}
+			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+			// Player-2
+			if (startwith != 0 && task_type != -1) {
+				startwith = -1;
+				// Print information
+				if (task_type == 2) System.out.println("Player-1 made a pisti!");
+				else if (task_type == 1) System.out.println("Player-1 made a cut!");
+				// Player 2 Turn
+				task_type = player2.playAI(r, board);
 				// Calculate Player 2 Score
-				last_card_winner = calculateScore(player2, board, task_type, -1, last_card_winner);
+				last_card_winner = calculateScore(player2, board, task_type, 1, last_card_winner);
 			}
             // Check if the game is end
-			if ((player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size == 0) || (task_type == -1)) {
+			if (task_type == -1) {
 				// Move all the cards on the board to the player who made a cut or a pisti lastly
 				Card card;
 				Card[] board_cards = board.getCards();
@@ -170,24 +177,24 @@ public class Game {
 	}
 	public static int calculateScore(Player player, Board board, int task_type, int turn, int last_card_winner) {
 		// Update the score, set taken cards count and clear the board 
-		Card card;
-		Card[] board_cards = board.getCards();
 		if (task_type == 2) {                        // If same ranks matched and the number of the cards on the board is 2 (pisti)
 			player.setScore(player.getScore()+10);
 			player.setTakenCardsCount(player.getTakenCardsCount()+board.getSize());
 			board.clearBoard();
-			if (turn == 1) last_card_winner = 1;
-			else last_card_winner = -1;
+			if (turn == 0) last_card_winner = 0;
+			else last_card_winner = 1;
 		}
 		else if (task_type == 1) {                   // If J or the same rank took all the cards (cut)
+			Card card;
+			Card[] board_cards = board.getCards();
 			player.setTakenCardsCount(player.getTakenCardsCount()+board.getSize());
 			for (int i=0; i<board.getSize(); i++) {
 				card = board_cards[i];
 				player.setScore(player.getScore()+card.getPoint());
 			}
 			board.clearBoard();
-			if (turn == 1) last_card_winner = 1;
-			else last_card_winner = -1;
+			if (turn == 0) last_card_winner = 0;
+			else last_card_winner = 1;
 		}
 		return last_card_winner;
 	}

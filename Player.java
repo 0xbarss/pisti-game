@@ -170,6 +170,7 @@ public class Player {
 			if (!matched) {
 				index = r.nextInt(this.size);
 			}
+			board.addCard(this.removeCard(index));
 		}
 		// Else, if there is no card on the board, it will be selected randomly except J
 		else if (board.getSize() == 0) {
@@ -177,13 +178,13 @@ public class Player {
 				randnum = r.nextInt(this.size);
 				// Choose any card except J
 				// If there is only J, play it
-				if ((this.cards[randnum].getRank() != 'J') || (this.cards[randnum].getRank() == 'J' && this.size == 0)) {
+				if ((this.cards[randnum].getRank() != 'J') || (this.cards[randnum].getRank() == 'J' && this.size == 1)) {
 					index = randnum;
 					break;
 				}
 			}                                                                                      
+			board.addCard(this.removeCard(index));
 		}
-		board.addCard(this.removeCard(index));
 		return task_type;
 	}
 }
