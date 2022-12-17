@@ -43,6 +43,8 @@ public class Game {
 			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
 				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+				player1.printCards("Player-1");
+				player2.printCards("Player-2");
 				// If one of the players has 4 J cards, restart the game
 				restart_game = checkCards(player1, player2);
 				if (restart_game) break;
@@ -74,7 +76,7 @@ public class Game {
 				last_card_winner = calculateScore(player2, board, task_type, 1, last_card_winner);
 			}
             // Check if the game is end
-			if (task_type == -1) {
+			if (task_type == -1 && initial_cards_size == 0) {
 				// Move all the cards on the board to the player who made a cut or a pisti lastly
 				Card card;
 				Card[] board_cards = board.getCards();
