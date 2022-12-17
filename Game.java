@@ -6,6 +6,12 @@ import java.io.FileWriter;
 
 public class Game {
     public static void main(String[] args) {	
+		boolean loop = true;
+		while (loop) {
+			loop = playPisti();
+		}
+    }
+	public static boolean playPisti() {
 		System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
 		// Create the instances and variables which are required
 		Scanner sc = new Scanner(System.in);
@@ -22,14 +28,24 @@ public class Game {
 		int initial_cards_size = initial_cards.length;
 		initial_cards = shuffleDeck(r, initial_cards);
 		initial_cards = cutDeck(r, initial_cards);
-        // Distribute 4 cards for each player and the board
+        // Distribute 4 cards for each player
 		initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+		// If one of the players has 4 J cards, restart the game
+		boolean restart_game = checkCards(player1, player2);
+		if (restart_game) {
+			sc.close();
+			return restart_game;
+		}
+		// Distribute 4 cards for board
 		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
         // Game Loop
         while (true) {
 			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
 				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+				// If one of the players has 4 J cards, restart the game
+				restart_game = checkCards(player1, player2);
+				if (restart_game) break;
 			}
 			// Player-1
 			if (startwith != 1 && task_type != -1) {
@@ -101,7 +117,9 @@ public class Game {
 				break;
 			}
         }
-    }
+		sc.close();
+		return restart_game;
+	}
     public static Card[] createDeck() {
         // Create a deck
         char[] suits = {'S', 'C', 'H', 'D'};
@@ -164,6 +182,25 @@ public class Game {
 			}
 		}
 		return initial_cards_size;
+	}
+	public static boolean checkCards(Player player1, Player player2) {
+		// Check if one of the player has 4 J
+		boolean confirmed = true;
+		for (Card card: player1.getCards()) {
+			if (card.getRank() != 'J') {
+				confirmed = false;
+				break;
+			}
+		}
+		if (!confirmed) {
+			for (Card card: player2.getCards()) {
+				if (card.getRank() != 'J') {
+					confirmed = false;
+					break;
+				}
+			}
+		}
+		return confirmed;
 	}
 	public static int placeCardsOnBoard(Board board, Card[] initial_cards, int initial_cards_size) {
 		// Place 4 cards on the board

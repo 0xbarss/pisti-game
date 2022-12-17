@@ -17,6 +17,7 @@ public class Player {
 		this.score = 0;
 	}
 	// Methods
+	public Card[] getCards() {return this.cards;}
 	public int getSize() {return this.size;}
 	public int getTakenCardsCount() {return this.cards_count;}
 	public int getScore() {return this.score;}
