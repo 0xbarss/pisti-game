@@ -43,14 +43,12 @@ public class Game {
 			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
 				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
-				player1.printCards("Player-1");
-				player2.printCards("Player-2");
 				// If one of the players has 4 J cards, restart the game
 				restart_game = checkCards(player1, player2);
 				if (restart_game) break;
 			}
 			// Player-1
-			if (startwith != 1 && task_type != -1) {
+			if (startwith != 1 && (task_type != -1 || initial_cards_size != 0)) {
 				startwith = -1;
 				// Print information
 				if (task_type == 2) System.out.println("Player-2 made a pisti!");
@@ -65,7 +63,7 @@ public class Game {
 			}
 			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
 			// Player-2
-			if (startwith != 0 && task_type != -1) {
+			if (startwith != 0 && (task_type != -1 || initial_cards_size != 0)) {
 				startwith = -1;
 				// Print information
 				if (task_type == 2) System.out.println("Player-1 made a pisti!");
