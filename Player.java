@@ -74,7 +74,7 @@ public class Player {
 			}
 			// Ask user to choose a card
 			System.out.print("Enter the card which you want to play: ");
-			input = sc.nextLine();
+			input = sc.next();
 			// Check if the input length is 2
 			if (input.length() != 2) {
 				System.out.println("Try Again!");

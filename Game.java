@@ -27,7 +27,7 @@ public class Game {
 		Card[] initial_cards = createDeck();
 		int initial_cards_size = initial_cards.length;
 		initial_cards = shuffleDeck(r, initial_cards);
-		initial_cards = cutDeck(r, initial_cards);
+		initial_cards = cutDeck(sc, r, dealer, initial_cards);
         // Distribute 4 cards for each player
 		initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
 		// If one of the players has 4 J cards, restart the game
@@ -62,6 +62,13 @@ public class Game {
 				last_card_winner = calculateScore(player1, board, task_type, 0, last_card_winner);
 			}
 			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
+			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
+				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+				// If one of the players has 4 J cards, restart the game
+				restart_game = checkCards(player1, player2);
+				if (restart_game) break;
+			}
 			// Player-2
 			if (startwith != 0 && (task_type != -1 || initial_cards_size != 0)) {
 				startwith = -1;
@@ -103,15 +110,9 @@ public class Game {
 				System.out.println("Player-1 Score: " + player1.getScore());
 				System.out.println("Player-2 Score: " + player2.getScore());
 	            // Print the winner
-				if (player1.getScore() > player2.getScore()) {
-					System.out.println("\n!!!Player-1 has won!!!\n");
-				}
-				else if (player1.getScore() < player2.getScore()) {
-					System.out.println("\n!!!Player-2 has won!!!\n");
-				}
-				else {
-					System.out.println("\n!!!Draw!!!\n");
-				}
+				if (player1.getScore() > player2.getScore()) System.out.println("\n!!!Player-1 has won!!!\n");
+				else if (player1.getScore() < player2.getScore()) System.out.println("\n!!!Player-2 has won!!!\n");
+				else System.out.println("\n!!!Draw!!!\n");
 				// Save the high score
 				saveHighScore(sc, player1.getScore());
 				break;
@@ -145,13 +146,40 @@ public class Game {
 		}
 		return cards;
 	}
-    public static Card[] cutDeck(Random r, Card[] cards) {
+    public static Card[] cutDeck(Scanner sc, Random r, int dealer, Card[] cards) {
 		// Cut the deck
 		int cardslength = cards.length;
-		Card[] new_cards = new Card[cards.length];
-		int randnum = r.nextInt(cardslength*3/5)+cardslength*2/5; // Find a value around the middle index of the array
-		System.arraycopy(cards, randnum, new_cards, 0, cardslength-randnum);
-		System.arraycopy(cards, 0, new_cards, cardslength-randnum, randnum);
+		Card[] new_cards = new Card[cardslength];
+		int randnum;
+		if (dealer == 0) {
+			int num;
+			String input;
+			while (true) {
+				System.out.print("Enter a position to cut deck (0-52): ");
+				input = sc.next();
+				try {
+					num = Integer.parseInt(input);
+				}
+				catch (NumberFormatException e) {
+					System.out.println("Please enter a number!");
+					continue;
+				}
+				if (num >= 0 && num <= 52) {
+					break;
+				}
+				System.out.println("Try Again, enter a number between 0 and 52!");
+			}
+			randnum = r.nextInt(5);
+			if (num > 45) num -= randnum;
+			else if (num < 7) num += randnum;
+			System.arraycopy(cards, num, new_cards, 0, cardslength-num);
+			System.arraycopy(cards, 0, new_cards, cardslength-num, num);
+		}
+		else if (dealer == 1) {
+			randnum = r.nextInt(cardslength*4/5)+cardslength*1/5; // Choose a random index
+			System.arraycopy(cards, randnum, new_cards, 0, cardslength-randnum);
+			System.arraycopy(cards, 0, new_cards, cardslength-randnum, randnum);
+		}
 		return new_cards;
 	}
 	public static int distributeCards(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
