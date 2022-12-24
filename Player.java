@@ -6,7 +6,7 @@ public class Player {
 	private Card[] cards; // Player's cards
 	private int size; // The size of the cards array, not real size, it will be used instead of removing or adding an element from an array
 	private int cards_count; // The number of taken cards
-	private int score; // The sum of the values of the cards which are taken without doing pisti
+	private int score; // The player's current score
 	private static char[] suits = {'S', 'C', 'H', 'D'};
 	private static char[] ranks = {'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K'};
 	// Constructor

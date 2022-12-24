@@ -1,8 +1,8 @@
 public class Card {
     // Attributes
 	private char suit; // ♠(Spades), ♣(Clubs), ♥(Hearts), ♦(Diamonds)
-	private char rank; // A(Ace) 1 2 3 4 5 6 7 8 9 10 J(Jack) Q(Queen) K(King)  *10 is represeneted as 0
-	private int point; // D0 has 3 points, C2 has 2 points, A & J have 1 point, others have 0
+	private char rank; // A(Ace) 2 3 4 5 6 7 8 9 10 J(Jack) Q(Queen) K(King)  *10 is represeneted as 0
+	private int point; // D0 has 3 points, C2 has 2 points, others have 1 point
 	// Constructor
 	public Card(char suit, char rank) {
 		this.suit = suit;
