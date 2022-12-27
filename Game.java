@@ -28,21 +28,21 @@ public class Game {
 		int initial_cards_size = initial_cards.length;
 		initial_cards = shuffleDeck(r, initial_cards);
 		initial_cards = cutDeck(sc, r, dealer, initial_cards);
-        // Distribute 4 cards for each player
-		initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+		// Place 4 cards for board
+		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
+        // Deal 4 cards for each player
+		initial_cards_size = dealCards(player1, player2, dealer, initial_cards, initial_cards_size);
 		// If one of the players has 4 J cards, restart the game
 		boolean restart_game = checkCards(player1, player2);
 		if (restart_game) {
 			sc.close();
 			return restart_game;
 		}
-		// Distribute 4 cards for board
-		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
         // Game Loop
         while (true) {
-			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
+			// If player 1 and player 2 have no card and there are enough cards to distribute, deal 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
-				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+				initial_cards_size = dealCards(player1, player2, dealer, initial_cards, initial_cards_size);
 				// If one of the players has 4 J cards, restart the game
 				restart_game = checkCards(player1, player2);
 				if (restart_game) break;
@@ -62,9 +62,9 @@ public class Game {
 				last_card_winner = calculateScore(player1, board, task_type, 0, last_card_winner);
 			}
 			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
-			// If player 1 and player 2 have no card and there are enough cards to distribute, distribute 4 cards for each player
+			// If player 1 and player 2 have no card and there are enough cards to distribute, deal 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
-				initial_cards_size = distributeCards(player1, player2, dealer, initial_cards, initial_cards_size);
+				initial_cards_size = dealCards(player1, player2, dealer, initial_cards, initial_cards_size);
 				// If one of the players has 4 J cards, restart the game
 				restart_game = checkCards(player1, player2);
 				if (restart_game) break;
@@ -182,8 +182,8 @@ public class Game {
 		}
 		return new_cards;
 	}
-	public static int distributeCards(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
-		// Distribute 4 cards for each player
+	public static int dealCards(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
+		// Deal 4 cards for each player
 		Card card;
 		if (dealer == 0) {
 			for (int i=0; i<8; i++) {
@@ -304,7 +304,7 @@ public class Game {
 			System.out.println("New High Score!");
 			// Ask player to enter a name
 			System.out.print("Enter your name: ");
-			String player_name = sc.nextLine();
+			String player_name = sc.next();
 			// Shift all elements and add new score
 			for (int i=capacity-1; i>0; i--) {
 				names[i] = names[i-1];
