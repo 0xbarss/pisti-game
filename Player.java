@@ -5,7 +5,8 @@ public class Player {
 	// Attributes
 	private Card[] cards; // Player's cards
 	private int size; // The size of the cards array, not real size, it will be used instead of removing or adding an element from an array
-	private int cards_count; // The number of taken cards
+	private Card[] taken_cards; // The taken cards by player
+	private int taken_cards_size; // The number of taken cards
 	private int score; // The player's current score
 	private static char[] suits = {'S', 'C', 'H', 'D'};
 	private static char[] ranks = {'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K'};
@@ -13,16 +14,17 @@ public class Player {
 	public Player() {
 		this.cards = new Card[4];
 		this.size = 0;
-		this.cards_count = 0;
+		this.taken_cards = new Card[4];
+		this.taken_cards_size = 0;
 		this.score = 0;
 	}
 	// Methods
 	public Card[] getCards() {return this.cards;}
 	public int getSize() {return this.size;}
-	public int getTakenCardsCount() {return this.cards_count;}
+	public int getTakenCardsSize() {return this.taken_cards_size;}
 	public int getScore() {return this.score;}
     public void setSize(int size) {this.size = size;}
-	public void setTakenCardsCount(int cards_count) {this.cards_count = cards_count;}
+	public void setTakenCardsSize(int taken_cards_size) {this.taken_cards_size = taken_cards_size;}
 	public void setScore(int score) {this.score = score;}
 	// Special Methods
 	public void addCard(Card card) {
@@ -56,6 +58,15 @@ public class Player {
 			System.out.print("-- " + card.getSuit() + card.getRank() + " --");
 		}
 		System.out.println();
+	}
+	public void addToTakenCards(Card card) {
+		if (this.taken_cards.length == this.taken_cards_size) {
+			Card[] new_taken_cards = new Card[2*taken_cards_size];
+			System.arraycopy(this.taken_cards, 0, new_taken_cards, 0, this.taken_cards_size);
+			this.taken_cards = new_taken_cards;
+		}
+		this.taken_cards[this.taken_cards_size] = card;
+		this.taken_cards_size += 1;
 	}
 	public int play(Scanner sc, Board board) {
 		char suit = '0';

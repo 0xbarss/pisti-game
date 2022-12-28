@@ -87,24 +87,26 @@ public class Game {
 				Card[] board_cards = board.getCards();
 				if (board.getSize() != 0) {
 					if (last_card_winner == 1) {
-						player1.setTakenCardsCount(player1.getTakenCardsCount()+board.getSize());
+						player1.setTakenCardsSize(player1.getTakenCardsSize()+board.getSize());
 						for (int i=0; i<board.getSize(); i++) {
 							card = board_cards[i];
+							player1.addToTakenCards(card);
 							player1.setScore(player1.getScore()+card.getPoint());
 						}
 						board.clearBoard();
 					}
 					else if (last_card_winner == -1) {
-						player2.setTakenCardsCount(player2.getTakenCardsCount()+board.getSize());
+						player2.setTakenCardsSize(player2.getTakenCardsSize()+board.getSize());
 						for (int i=0; i<board.getSize(); i++) {
 							card = board_cards[i];
+							player2.addToTakenCards(card);
 							player2.setScore(player2.getScore()+card.getPoint());
 						}
 						board.clearBoard();
 					}
 				}
                 // Add +3 additional points to the player taken more cards
-				if (player1.getTakenCardsCount() > player2.getTakenCardsCount()) player1.setScore(player1.getScore()+3);
+				if (player1.getTakenCardsSize() > player2.getTakenCardsSize()) player1.setScore(player1.getScore()+3);
 				else player2.setScore(player2.getScore()+3);
                 // Print the scores
 				System.out.println("Player-1 Score: " + player1.getScore());
@@ -242,19 +244,22 @@ public class Game {
 	}
 	public static int calculateScore(Player player, Board board, int task_type, int turn, int last_card_winner) {
 		// Update the score, set taken cards count and clear the board 
+		Card card;
+		Card[] board_cards = board.getCards();
 		if (task_type == 2) {                        // If same ranks matched and the number of the cards on the board is 2 (pisti)
 			player.setScore(player.getScore()+10);
-			player.setTakenCardsCount(player.getTakenCardsCount()+board.getSize());
+			for (int i=0; i<board.getSize(); i++) {
+				card = board_cards[i];
+				player.addToTakenCards(card);
+			}
 			board.clearBoard();
 			if (turn == 0) last_card_winner = 0;
 			else last_card_winner = 1;
 		}
 		else if (task_type == 1) {                   // If J or the same rank took all the cards (cut)
-			Card card;
-			Card[] board_cards = board.getCards();
-			player.setTakenCardsCount(player.getTakenCardsCount()+board.getSize());
 			for (int i=0; i<board.getSize(); i++) {
 				card = board_cards[i];
+				player.addToTakenCards(card);
 				player.setScore(player.getScore()+card.getPoint());
 			}
 			board.clearBoard();
