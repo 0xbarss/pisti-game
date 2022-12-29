@@ -13,6 +13,8 @@ public class Game {
     }
 	public static boolean playPisti() {
 		System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+		// Welcome to Pisti
+		System.out.println("\n  --  Welcome to Pisti  --  \n");
 		// Create the instances and variables which are required
 		Scanner sc = new Scanner(System.in);
 		Random r = new Random(System.currentTimeMillis());
@@ -20,15 +22,15 @@ public class Game {
 		Player player2 = new Player(); // AI
 		Board board = new Board();
 		int dealer = r.nextInt(2); // 0-->Human | 1-->AI
-		int startwith = dealer; // 0-->Human | 1-->AI | -1-->Ignore
-		int last_card_winner = -1; // 0-->Human | 1-->AI
-		int task_type = 0; // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
+		int startwith = dealer;           // 0-->Human | 1-->AI | -1-->Ignore
+		int last_card_winner = -1;        // 0-->Human | 1-->AI | -1-->Ignore
+		int task_type = 0;                // -1-->Endgame | 0-->Continue | 1-->Cut | 2-->Pisti
         // Create, shuffle and cut the deck
 		Card[] initial_cards = createDeck();
 		int initial_cards_size = initial_cards.length;
 		initial_cards = shuffleDeck(r, initial_cards);
 		initial_cards = cutDeck(sc, r, dealer, initial_cards);
-		// Place 4 cards for board
+		// Place 4 cards on board
 		initial_cards_size = placeCardsOnBoard(board, initial_cards, initial_cards_size);
         // Deal 4 cards for each player
 		initial_cards_size = dealCards(player1, player2, dealer, initial_cards, initial_cards_size);
@@ -40,7 +42,7 @@ public class Game {
 		}
         // Game Loop
         while (true) {
-			// If player 1 and player 2 have no card and there are enough cards to distribute, deal 4 cards for each player
+			// If player 1 and player 2 have no card and there are enough cards to deal, deal 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
 				initial_cards_size = dealCards(player1, player2, dealer, initial_cards, initial_cards_size);
 				// If one of the players has 4 J cards, restart the game
@@ -61,8 +63,9 @@ public class Game {
 				// Calculate Player 1 Score
 				last_card_winner = calculateScore(player1, board, task_type, 0, last_card_winner);
 			}
-			System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
-			// If player 1 and player 2 have no card and there are enough cards to distribute, deal 4 cards for each player
+			// In the beginning of the game, to show the print statements, startwith condition is checked whether the game is in 1st loop
+			if (startwith == -1) System.out.print("\033[H\033[2J"); // Clear the console and move the cursor up
+			// If player 1 and player 2 have no card and there are enough cards to deal, deal 4 cards for each player
 			if (player1.getSize() == 0 && player2.getSize() == 0 && initial_cards_size > 7) {
 				initial_cards_size = dealCards(player1, player2, dealer, initial_cards, initial_cards_size);
 				// If one of the players has 4 J cards, restart the game
@@ -82,7 +85,7 @@ public class Game {
 			}
             // Check if the game is end
 			if (task_type == -1 && initial_cards_size == 0) {
-				// Move all the cards on the board to the player who made a cut or a pisti lastly
+				// Move all the cards on the board to the player who made a cut or a pisti last
 				Card card;
 				Card[] board_cards = board.getCards();
 				if (board.getSize() != 0) {
@@ -134,6 +137,7 @@ public class Game {
 				cards[i*ranks.length+j] = card;
 			}
 		}
+		System.out.println("The deck is created.");
 		return cards;
     }
     public static Card[] shuffleDeck(Random r, Card[] cards) {
@@ -146,6 +150,7 @@ public class Game {
 			cards[i] = cards[randnum];
 			cards[randnum] = temp;
 		}
+		System.out.println("The deck is shuffled.");
 		return cards;
 	}
     public static Card[] cutDeck(Scanner sc, Random r, int dealer, Card[] cards) {
@@ -182,6 +187,7 @@ public class Game {
 			System.arraycopy(cards, randnum, new_cards, 0, cardslength-randnum);
 			System.arraycopy(cards, 0, new_cards, cardslength-randnum, randnum);
 		}
+		System.out.println("The deck is cut.");
 		return new_cards;
 	}
 	public static int dealCards(Player player1, Player player2, int dealer, Card[] initial_cards, int initial_cards_size) {
@@ -214,7 +220,7 @@ public class Game {
 		return initial_cards_size;
 	}
 	public static boolean checkCards(Player player1, Player player2) {
-		// Check if one of the player has 4 J
+		// Check if one of the players has 4 J
 		boolean confirmed = true;
 		for (Card card: player1.getCards()) {
 			if (card.getRank() != 'J') {
@@ -292,7 +298,7 @@ public class Game {
 				scores[index] = Integer.parseInt(data[data.length-1]);
 				index += 1;
 			}
-			if (index == capacity) index = capacity-1;
+			if (index == capacity) index = capacity-1; // If there are 10 scores in the file, do not include the 10th score
 		}
 		catch (IOException r) {
 			// System.out.println("An error occured");
