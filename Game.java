@@ -313,9 +313,11 @@ public class Game {
 		// Add the score to the file
 		if (confirmed) {
 			System.out.println("New High Score!");
+			// In order to avoid a bug, added
+			sc.nextLine();
 			// Ask player to enter a name
 			System.out.print("Enter your name: ");
-			String player_name = sc.next();
+			String player_name = sc.nextLine();
 			// Shift all elements and add new score
 			for (int i=capacity-1; i>0; i--) {
 				names[i] = names[i-1];
